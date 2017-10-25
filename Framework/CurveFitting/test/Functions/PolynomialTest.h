@@ -72,6 +72,22 @@ public:
                       1e-12);
     }
   }
+
+  void test_validDefaultParameters(){
+    Polynomial pol;
+    pol.initialize();
+
+    const std::size_t numPoints = 10;
+    std::array<double, numPoints> xValues;
+    std::iota(xValues.begin(), xValues.end(), 0);
+
+    std::array<double, numPoints> yValues;
+    TS_ASSERT_THROWS_NOTHING(pol.function1D(yValues.data(), xValues.data(), numPoints));
+    for (size_t i = 0; i < numPoints; ++i){
+      TS_ASSERT_EQUALS(yValues[i], 0.0);
+    }
+  }
+
 };
 
 #endif /* MANTID_CURVEFITTING_POLYNOMIALTEST_H_ */

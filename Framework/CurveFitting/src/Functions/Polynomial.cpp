@@ -19,10 +19,7 @@ DECLARE_FUNCTION(Polynomial)
 Polynomial::Polynomial() : m_n(0) {}
 
 void Polynomial::init() {
-  declareParameter("n", 0, "Order of the highest term in polynomial");
-  declareParameter("A0", 0, "Coefficient for the constant term. When n > 0, a "
-                            "parameter Am for 0 <= m <= n is declared, "
-                            "representing the coefficient of the x^m term");
+  declareParameter("A0", 0, "Coefficient for the constant term");
 }
 
 /** Evaluate the function at the supplied points
