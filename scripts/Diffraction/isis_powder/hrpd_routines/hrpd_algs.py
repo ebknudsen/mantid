@@ -1,5 +1,6 @@
 from __future__ import (absolute_import, division, print_function)
 
+import re
 import mantid.simpleapi as mantid
 
 from isis_powder.hrpd_routines import hrpd_advanced_config
@@ -93,6 +94,25 @@ def get_run_details(run_number_string, inst_settings, is_vanadium):
     return create_run_details_object(run_number_string=run_number_string, inst_settings=inst_settings,
                                      is_vanadium_run=is_vanadium, empty_run_call=empty_run_callable,
                                      vanadium_run_call=vanadium_run_callable)
+
+
+def get_tof_window(ws, inst_settings):
+    ws_title = ws.getTitle()
+    match = re.search(r"\d+-\d+", ws_title)
+
+    window_from_ws = match[0] if match else None
+    window_from_user = getattr(inst_settings, "tof_window", None)
+
+    if window_from_user is not None:
+        if window_from_ws not in (window_from_user, None):
+            raise RuntimeWarning("HRPD scripts were passed a TOF window of {0} but the run thinks it has TOF window of "
+                                 "{1}. Using {0}".format(window_from_user, window_from_ws))
+        return window_from_user
+
+    if window_from_ws is not None:
+        return window_from_ws
+
+    raise RuntimeError("Please provide HRPD scripts with a time-of-flight window")
 
 
 def hrpd_get_inst_mode(forwarded_value, inst_settings):

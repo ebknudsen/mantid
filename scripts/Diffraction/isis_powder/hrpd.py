@@ -34,9 +34,7 @@ class HRPD(AbstractInst):
             do_absorb_corrections=self._inst_settings.do_absorb_corrections)
 
     def create_vanadium(self, **kwargs):
-        self._switch_tof_window_inst_settings(kwargs.get("window"))
         self._inst_settings.update_attributes(kwargs=kwargs)
-
         return self._create_vanadium(run_number_string=self._inst_settings.run_in_range,
                                      do_absorb_corrections=self._inst_settings.do_absorb_corrections)
 
@@ -64,6 +62,8 @@ class HRPD(AbstractInst):
                 sample_details_obj=self._sample_details, is_vanadium=self._is_vanadium)
 
     def _crop_banks_to_user_tof(self, focused_banks):
+        window = hrpd_algs.hrpd_get_tof_window(ws=focused_banks, inst_settings=self._inst_settings)
+        self._switch_tof_window_inst_settings(window)
         return common.crop_banks_using_crop_list(focused_banks, self._inst_settings.tof_cropping_values)
 
     def _crop_van_to_expected_tof_range(self, van_ws_to_crop):
