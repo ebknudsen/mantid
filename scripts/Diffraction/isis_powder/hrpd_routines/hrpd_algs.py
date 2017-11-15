@@ -96,12 +96,17 @@ def get_run_details(run_number_string, inst_settings, is_vanadium):
                                      vanadium_run_call=vanadium_run_callable)
 
 
-def get_tof_window(ws, inst_settings):
+def hrpd_get_inst_mode(forwarded_value, inst_settings):
+    cal_mapping = forwarded_value
+    return common.cal_map_dictionary_key_helper(dictionary=cal_mapping, key=inst_settings.mode)
+
+
+def hrpd_get_tof_window(forwarded_value, inst_settings, ws):
     ws_title = ws.getTitle()
     match = re.search(r"\d+-\d+", ws_title)
 
     window_from_ws = match[0] if match else None
-    window_from_user = getattr(inst_settings, "tof_window", None)
+    window_from_user = common.cal_map_dictionary_key_helper(dictionary=forwarded_value, key=inst_settings.tof_window)
 
     if window_from_user is not None:
         if window_from_ws not in (window_from_user, None):
@@ -113,16 +118,6 @@ def get_tof_window(ws, inst_settings):
         return window_from_ws
 
     raise RuntimeError("Please provide HRPD scripts with a time-of-flight window")
-
-
-def hrpd_get_inst_mode(forwarded_value, inst_settings):
-    cal_mapping = forwarded_value
-    return common.cal_map_dictionary_key_helper(dictionary=cal_mapping, key=inst_settings.mode)
-
-
-def hrpd_get_tof_window(forwarded_value, inst_settings):
-    cal_mapping = forwarded_value
-    return common.cal_map_dictionary_key_helper(dictionary=cal_mapping, key=inst_settings.tof_window)
 
 
 def process_vanadium_for_focusing(bank_spectra, spline_number):
