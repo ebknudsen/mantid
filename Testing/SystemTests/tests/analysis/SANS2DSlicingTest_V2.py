@@ -27,6 +27,9 @@ class SANS2DMinimalBatchReductionSlicedTest_V2(stresstesting.MantidStressTest):
         self.tolerance = 0.02
         self.tolerance_is_reller=True
         self.disableChecking.append('Instrument')
+        ws = AnalysisDataService['trans_test_rear'][0]
+        print(ws.getAxis(0).extractValues())
+        print(ws.readX(0))
         return str(AnalysisDataService['trans_test_rear'][0]), 'SANSReductionGUI.nxs'
 
 

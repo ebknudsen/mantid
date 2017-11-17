@@ -27,11 +27,6 @@ using namespace API;
 using namespace DataObjects;
 using namespace HistogramData;
 
-/// Default constructor
-ConvertUnits::ConvertUnits()
-    : Algorithm(), m_numberOfSpectra(0), m_distribution(false),
-      m_inputEvents(false), m_inputUnit(), m_outputUnit() {}
-
 /// Initialisation method
 void ConvertUnits::init() {
   auto wsValidator = boost::make_shared<CompositeValidator>();

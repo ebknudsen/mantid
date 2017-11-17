@@ -989,13 +989,25 @@ def set_properties(alg_object, *args, **kwargs):
         mandatory_props = alg_object.mandatoryProperties()
     else:
         mandatory_props = []
+    postponed = []
     if len(kwargs) > 0:
         for (key, value) in iteritems(kwargs):
+            if "IndexSet" in key:
+                # The `IndexSet` sub-property of the "workspace property with index"
+                # must be set after the workspace since it is validated based on in.
+                postponed.append((key, value))
+                continue
             do_set_property(key, value)
             try:
                 mandatory_props.remove(key)
             except ValueError:
                 pass
+    for (key, value) in postponed:
+        do_set_property(key, value)
+        try:
+            mandatory_props.remove(key)
+        except ValueError:
+            pass
     if len(args) > 0:
         for (key, value) in zip(mandatory_props[:len(args)], args):
             do_set_property(key, value)

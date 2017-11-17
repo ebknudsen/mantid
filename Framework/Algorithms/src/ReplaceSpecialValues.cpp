@@ -1,6 +1,3 @@
-//----------------------------------------------------------------------
-// Includes
-//----------------------------------------------------------------------
 #include "MantidAlgorithms/ReplaceSpecialValues.h"
 #include "MantidKernel/Exception.h"
 #include <limits>
@@ -123,6 +120,14 @@ bool ReplaceSpecialValues::checkIfSmall(const double value) const {
 
 bool ReplaceSpecialValues::checkifPropertyEmpty(const double value) const {
   return (std::abs(value - Mantid::EMPTY_DBL()) < 1e-08);
+}
+
+Parallel::ExecutionMode ReplaceSpecialValues::getParallelExecutionMode(
+    const std::map<std::string, Parallel::StorageMode> &storageModes) const {
+  if (storageModes.begin()->second != Parallel::StorageMode::Cloned)
+    throw std::runtime_error("InputWorkspace must have " +
+                             Parallel::toString(Parallel::StorageMode::Cloned));
+  return Parallel::getCorrespondingExecutionMode(Parallel::StorageMode::Cloned);
 }
 
 } // namespace Algorithms

@@ -36,6 +36,7 @@ import tempfile
 import time
 import unittest
 from six import PY3
+import boost.mpi as mpi
 
 # Path to this file
 THIS_MODULE_DIR = os.path.dirname(os.path.realpath(__file__))
@@ -341,6 +342,8 @@ class MantidStressTest(unittest.TestCase):
         of validateMethod() and validate(). If validate() is not overridden this will
         return True.
         """
+        if mpi.world.rank != 0:
+            return True
         # if no validation is specified then it must be ok
         validation = self.validate()
         if validation is None:

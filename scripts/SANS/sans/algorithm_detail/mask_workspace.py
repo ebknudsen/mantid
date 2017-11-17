@@ -243,12 +243,16 @@ def mask_spectra(mask_info, workspace, spectra_block, detector_type):
 
     # Perform the masking
     if total_spectra:
-        mask_name = "MaskDetectors"
-        mask_options = {"Workspace": workspace,
-                        "SpectraList": total_spectra}
+        mask_name = "MaskSpectra"
+        mask_options = {"InputWorkspace": workspace,
+                "InputWorkspaceIndexType": "SpectrumNumber",
+                #"InputWorkspaceIndexSet": total_spectra,
+                "OutputWorkspace": "__dummy"}
         mask_alg = create_unmanaged_algorithm(mask_name, **mask_options)
+        mask_alg.setProperty("InputWorkspaceIndexSet", list(set(total_spectra)))
+        mask_alg.setProperty("OutputWorkspace", workspace)
         mask_alg.execute()
-        workspace = mask_alg.getProperty("Workspace").value
+        workspace = mask_alg.getProperty("OutputWorkspace").value
     return workspace
 
 

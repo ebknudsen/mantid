@@ -124,6 +124,14 @@ protected:
    */
   inline PyObject *getSelf() const { return m_self; }
 
+  /** Get correct execution mode based on input storage modes for an MPI run. */
+  // TODO globally enabled for testing, must be removed!
+  Parallel::ExecutionMode getParallelExecutionMode(
+      const std::map<std::string, Parallel::StorageMode> &)
+      const override {
+    return Parallel::ExecutionMode::Distributed;
+  }
+
 private:
   /// Private init for this algorithm
   void init() override;

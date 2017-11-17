@@ -1,9 +1,6 @@
 #ifndef MANTID_ALGORITHMS_REPLACESPECIALVALUES_H_
 #define MANTID_ALGORITHMS_REPLACESPECIALVALUES_H_
 
-//----------------------------------------------------------------------
-// Includes
-//----------------------------------------------------------------------
 #include "MantidAlgorithms/UnaryOperation.h"
 
 namespace Mantid {
@@ -56,6 +53,11 @@ public:
   const std::string category() const override {
     return "CorrectionFunctions\\SpecialCorrections";
   }
+
+protected:
+  Parallel::ExecutionMode getParallelExecutionMode(
+      const std::map<std::string, Parallel::StorageMode> &storageModes)
+      const override;
 
 private:
   // Overridden UnaryOperation methods

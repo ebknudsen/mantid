@@ -263,6 +263,7 @@ const std::string Algorithm::workspaceMethodInputProperty() const { return ""; }
  *
  */
 void Algorithm::initialize() {
+  //fprintf(stderr, "%s\n", name().c_str());
   // Bypass the initialization if the algorithm has already been initialized.
   if (m_isInitialized)
     return;
@@ -759,6 +760,7 @@ void Algorithm::setupAsChildAlgorithm(Algorithm_sptr alg,
                                       const bool enableLogging) {
   // set as a child
   alg->setChild(true);
+  // TODO set communicator (or rely on AlgorithmManager?)
   alg->setLogging(enableLogging);
 
   // Initialise the Child Algorithm
@@ -1739,7 +1741,7 @@ void Algorithm::execNonMaster() {
   if (m_pureOutputWorkspaceProps.empty())
     return;
   // Does Algorithm have exactly one input and one output workspace property?
-  if (m_inputWorkspaceProps.size() == 1 &&
+  if (m_inputWorkspaceProps.size() > 0 &&
       m_pureOutputWorkspaceProps.size() == 1) {
     // Does the input workspace property point to an actual workspace?
     if (const auto &ws = m_inputWorkspaceProps.front()->getWorkspace()) {

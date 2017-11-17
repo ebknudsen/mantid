@@ -82,6 +82,10 @@ MatrixWorkspace::~MatrixWorkspace() {
  * Writing spectrum number or detector ID groupings of any spectrum in the
  * workspace will invalidate this reference. */
 const Indexing::IndexInfo &MatrixWorkspace::indexInfo() const {
+  //if (storageMode() != m_indexInfo->storageMode())
+  //  throw std::runtime_error("Parallel::StorageMode of workspace does not "
+  //                           "match that of its IndexInfo. This indicates a "
+  //                           "flaw in the workspace creation proceedure.");
   std::lock_guard<std::mutex> lock(m_indexInfoMutex);
   // Individual SpectrumDefinitions in SpectrumInfo may have changed. Due to a
   // copy-on-write mechanism the definitions stored in IndexInfo may then be out
@@ -237,6 +241,7 @@ void MatrixWorkspace::initialize(const std::size_t &NVectors,
 
 void MatrixWorkspace::initialize(const std::size_t &NVectors,
                                  const HistogramData::Histogram &histogram) {
+  // Kind of works with MPI if we later use initializeFromParent, otherwise everything is broken. Should forbid using this?
   Indexing::IndexInfo indices(NVectors);
   // Empty SpectrumDefinitions to indicate no default mapping to detectors.
   indices.setSpectrumDefinitions(std::vector<SpectrumDefinition>(NVectors));
