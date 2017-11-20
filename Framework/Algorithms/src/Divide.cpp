@@ -4,6 +4,8 @@
 #include "MantidAlgorithms/Divide.h"
 #include "MantidDataObjects/WorkspaceSingleValue.h"
 
+#include <boost/math/special_functions/pow.hpp>
+
 using namespace Mantid::API;
 using namespace Mantid::Kernel;
 using namespace Mantid::DataObjects;
@@ -39,7 +41,7 @@ void Divide::performBinaryOperation(const MantidVec &lhsX,
   for (int j = 0; j < bins; ++j) {
     // Get references to the input Y's
     const double leftY = lhsY[j];
-    const double rightY = rhsY[j];
+    const double inv_rightY = 1.0 / rhsY[j];
 
     //  error dividing two uncorrelated numbers, re-arrange so that you don't
     //  get infinity if leftY==0 (when rightY=0 the Y value and the result will
@@ -48,12 +50,13 @@ void Divide::performBinaryOperation(const MantidVec &lhsX,
     // (Sa c/a)2 + (Sb c/b)2 = (Sc)2
     // = (Sa 1/b)2 + (Sb (a/b2))2
     // (Sc)2 = (1/b)2( (Sa)2 + (Sb a/b)2 )
-    EOut[j] =
-        sqrt(pow(lhsE[j], 2) + pow(leftY * rhsE[j] / rightY, 2)) / fabs(rightY);
+    EOut[j] = std::sqrt(boost::math::pow<2>(lhsE[j]) +
+                        boost::math::pow<2>(leftY * rhsE[j] * inv_rightY)) *
+              std::abs(inv_rightY);
 
     // Copy the result last in case one of the input workspaces is also any
     // output
-    YOut[j] = leftY / rightY;
+    YOut[j] = leftY * inv_rightY;
     ;
   }
 }
@@ -65,23 +68,27 @@ void Divide::performBinaryOperation(const MantidVec &lhsX,
                                     MantidVec &EOut) {
   (void)lhsX; // Avoid compiler warning
 
-  if (rhsY == 0 && m_warnOnZeroDivide)
+  if (m_warnOnZeroDivide && rhsY == 0.)
     g_log.warning() << "Division by zero: the RHS is a single-valued vector "
                        "with value zero."
                     << "\n";
 
+  auto inv_rhsY = 1.0 / rhsY;
+
   // Do the right-hand part of the error calculation just once
-  const double rhsFactor = pow(rhsE / rhsY, 2);
+  double rhsFactor = boost::math::pow<2>(rhsE * inv_rhsY);
   const int bins = static_cast<int>(lhsE.size());
   for (int j = 0; j < bins; ++j) {
     // Get reference to input Y
     const double leftY = lhsY[j];
 
     // see comment in the function above for the error formula
-    EOut[j] = sqrt(pow(lhsE[j], 2) + pow(leftY, 2) * rhsFactor) / fabs(rhsY);
+    EOut[j] = std::sqrt(boost::math::pow<2>(lhsE[j]) +
+                        boost::math::pow<2>(leftY) * rhsFactor) *
+              std::abs(inv_rhsY);
     // Copy the result last in case one of the input workspaces is also any
     // output
-    YOut[j] = leftY / rhsY;
+    YOut[j] = leftY * inv_rhsY;
   }
 }
 

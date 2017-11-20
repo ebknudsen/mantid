@@ -657,8 +657,10 @@ void ConvertUnits::reverse(API::MatrixWorkspace_sptr WS) {
                                                         WS->x(0).crend());
     for (size_t j = 0; j < numberOfSpectra; ++j) {
       WS->setSharedX(j, reverseX);
-      std::reverse(WS->dataY(j).begin(), WS->dataY(j).end());
-      std::reverse(WS->dataE(j).begin(), WS->dataE(j).end());
+      auto &Y = WS->mutableY(j);
+      auto &E = WS->mutableE(j);
+      std::reverse(Y.begin(), Y.end());
+      std::reverse(E.begin(), E.end());
       if (j % 100 == 0)
         interruption_point();
     }
@@ -671,9 +673,12 @@ void ConvertUnits::reverse(API::MatrixWorkspace_sptr WS) {
       if (isInputEvents) {
         eventWS->getSpectrum(j).reverse();
       } else {
-        std::reverse(WS->mutableX(j).begin(), WS->mutableX(j).end());
-        std::reverse(WS->mutableY(j).begin(), WS->mutableY(j).end());
-        std::reverse(WS->mutableE(j).begin(), WS->mutableE(j).end());
+        auto &X = WS->mutableX(j);
+        auto &Y = WS->mutableY(j);
+        auto &E = WS->mutableE(j);
+        std::reverse(X.begin(), X.end());
+        std::reverse(Y.begin(), Y.end());
+        std::reverse(E.begin(), E.end());
       }
       PARALLEL_END_INTERUPT_REGION
     }
