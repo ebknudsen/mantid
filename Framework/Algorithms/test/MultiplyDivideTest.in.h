@@ -984,5 +984,64 @@ public:
 
 };
 
+class @MULTIPLYDIVIDETEST_CLASS@Performance : public CxxTest::TestSuite
+{
+private:
+  MatrixWorkspace_sptr fibWS1d, histWS_5x10_123, histWS_5x10_154, histWS_5x10_bin, eventWS_5x10_50;
+
+public:
+  bool DO_DIVIDE;
+  std::string message;
+
+  static @MULTIPLYDIVIDETEST_CLASS@Performance *createSuite() { return new @MULTIPLYDIVIDETEST_CLASS@Performance(); }
+  static void destroySuite( @MULTIPLYDIVIDETEST_CLASS@Performance *suite ) { delete suite; }
+
+  @MULTIPLYDIVIDETEST_CLASS@Performance()
+  {
+    DO_DIVIDE = @MULTIPLYDIVIDETEST_DO_DIVIDE@;
+    histWS_5x10_123 = WorkspaceCreationHelper::create2DWorkspace123(1,20, true);
+    histWS_5x10_154 = WorkspaceCreationHelper::create2DWorkspace154(1,20, true);
+  }
+
+  void test_2D_2DbyOperatorOverload()
+  {
+    MatrixWorkspace_sptr work_in1 = histWS_5x10_123;
+    MatrixWorkspace_sptr work_in2 = histWS_5x10_154;
+    MatrixWorkspace_sptr work_out1, work_out2, work_out3;
+    const double value{3.0};
+    if (DO_DIVIDE)
+    {
+      work_out1 = work_in1/work_in2;
+      work_out2 = work_in1/value;
+      work_out3 = value/work_in2;
+    }
+    else
+    {
+      work_out1 = work_in1*work_in2;
+      work_out2 = work_in1*value;
+      work_out3 = value*work_in2;
+    }
+
+  }
+
+  void test_2D_2DbyOperatorOverload_inPlace()
+  {
+    MatrixWorkspace_sptr work_in1 = WorkspaceCreationHelper::create2DWorkspace123(1,20,true);
+    MatrixWorkspace_sptr work_in2 = histWS_5x10_bin;
+    MatrixWorkspace_sptr work_out1;
+    if (DO_DIVIDE)
+    {
+      work_in1 /= work_in2;
+    }
+    else
+    {
+      work_in1 *= work_in2;
+    }
+
+  }
+
+
+ };
+
 
 #endif /*MULTIPLYTEST_H_ or DIVIDETEST_H_*/
