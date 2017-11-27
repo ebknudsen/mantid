@@ -5,15 +5,17 @@
 #include "MantidKernel/StringTokenizer.h"
 #include "MantidVatesAPI/MetadataJsonManager.h"
 #include "MantidVatesAPI/VatesConfigurations.h"
-#include "vtkUnstructuredGridAlgorithm.h"
+#include "vtkPolyDataAlgorithm.h"
 #include <boost/scoped_ptr.hpp>
 #include <string>
 // cppcheck-suppress class_X_Y
-class VTK_EXPORT vtkPeaksFilter : public vtkUnstructuredGridAlgorithm {
+class VTK_EXPORT vtkPeaksFilter : public vtkPolyDataAlgorithm {
 public:
   static vtkPeaksFilter *New();
-  vtkTypeMacro(vtkPeaksFilter, vtkUnstructuredGridAlgorithm) void PrintSelf(
-      ostream &os, vtkIndent indent) override;
+  // clang-format off
+  vtkTypeMacro(vtkPeaksFilter, vtkPolyDataAlgorithm)
+  void PrintSelf(ostream &os, vtkIndent indent) override;
+  // clang-format on
   vtkPeaksFilter(const vtkPeaksFilter &) = delete;
   vtkPeaksFilter &operator=(const vtkPeaksFilter &) = delete;
   void SetPeaksWorkspace(const std::string &peaksWorkspaceName,

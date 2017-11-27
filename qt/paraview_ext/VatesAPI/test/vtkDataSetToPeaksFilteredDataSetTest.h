@@ -26,10 +26,10 @@
 #include <vtkDataSet.h>
 #include <vtkFieldData.h>
 #include <vtkFloatArray.h>
-#include <vtkUnsignedCharArray.h>
-#include <vtkUnstructuredGrid.h>
-#include <vtkSmartPointer.h>
 #include <vtkNew.h>
+#include <vtkPolyData.h>
+#include <vtkSmartPointer.h>
+#include <vtkUnsignedCharArray.h>
 
 #include <boost/shared_ptr.hpp>
 
@@ -59,7 +59,7 @@ struct PeaksFilterDataContainer {
 
 class vtkDataSetToPeaksFilteredDataSetTest : public CxxTest::TestSuite {
 private:
-  vtkSmartPointer<vtkUnstructuredGrid> makeSplatterSourceGrid() {
+  vtkSmartPointer<vtkPolyData> makeSplatterSourceGrid() {
     FakeProgressAction progressUpdate;
     MDEventWorkspace3Lean::sptr ws =
         MDEventsTestHelper::makeMDEW<3>(10, -10.0, 10.0, 1);
@@ -67,8 +67,8 @@ private:
     factory.initialize(ws);
     vtkSmartPointer<vtkDataSet> product;
     TS_ASSERT_THROWS_NOTHING(product = factory.create(progressUpdate));
-    auto splatData = vtkUnstructuredGrid::SafeDownCast(product.Get());
-    vtkSmartPointer<vtkUnstructuredGrid> grid(splatData);
+    auto splatData = vtkPolyData::SafeDownCast(product.Get());
+    vtkSmartPointer<vtkPolyData> grid(splatData);
     return grid;
   }
 
@@ -121,8 +121,8 @@ public:
     }
   }
 
-  void do_test_peaks(vtkSmartPointer<vtkUnstructuredGrid> in,
-                     vtkSmartPointer<vtkUnstructuredGrid> out,
+  void do_test_peaks(vtkSmartPointer<vtkPolyData> in,
+                     vtkSmartPointer<vtkPolyData> out,
                      std::vector<PeaksFilterDataContainer> peakData) {
     vtkPoints *inPoints = in->GetPoints();
     vtkPoints *outPoints = out->GetPoints();
@@ -196,22 +196,22 @@ public:
   }
 
   void testThrowIfInputNull() {
-    vtkUnstructuredGrid *in = nullptr;
-    auto out = vtkSmartPointer<vtkUnstructuredGrid>::New();
+    vtkPolyData *in = nullptr;
+    auto out = vtkSmartPointer<vtkPolyData>::New();
     TS_ASSERT_THROWS(vtkDataSetToPeaksFilteredDataSet peaksFilter(in, out),
                      std::runtime_error);
   }
 
   void testThrowIfOutputNull() {
-    auto in = vtkSmartPointer<vtkUnstructuredGrid>::New();
-    vtkUnstructuredGrid *out = nullptr;
+    auto in = vtkSmartPointer<vtkPolyData>::New();
+    vtkPolyData *out = nullptr;
     TS_ASSERT_THROWS(vtkDataSetToPeaksFilteredDataSet peaksFilter(in, out),
                      std::runtime_error);
   }
 
   void testExecThrowIfNoInit() {
-    auto in = vtkSmartPointer<vtkUnstructuredGrid>::New();
-    auto out = vtkSmartPointer<vtkUnstructuredGrid>::New();
+    auto in = vtkSmartPointer<vtkPolyData>::New();
+    auto out = vtkSmartPointer<vtkPolyData>::New();
     vtkDataSetToPeaksFilteredDataSet peaksFilter(in, out);
     FakeProgressAction updateProgress;
     TS_ASSERT_THROWS(peaksFilter.execute(updateProgress), std::runtime_error);
@@ -220,7 +220,7 @@ public:
   void testExecutionWithSingleSphericalPeakInQSample() {
     // Arrange
     auto in = makeSplatterSourceGrid();
-    auto out = vtkSmartPointer<vtkUnstructuredGrid>::New();
+    auto out = vtkSmartPointer<vtkPolyData>::New();
     vtkDataSetToPeaksFilteredDataSet peaksFilter(in, out);
 
     Mantid::Kernel::V3D coordinate(0, 0, 0);
@@ -257,7 +257,7 @@ public:
   void testExecutionWithSingleEllipsoidPeakInQSample() {
     // Arrange
     auto in = makeSplatterSourceGrid();
-    auto out = vtkSmartPointer<vtkUnstructuredGrid>::New();
+    auto out = vtkSmartPointer<vtkPolyData>::New();
     vtkDataSetToPeaksFilteredDataSet peaksFilter(in, out);
 
     Mantid::Kernel::V3D coordinate(0, 0, 0);
@@ -299,7 +299,7 @@ public:
   void testExecutionWithSingleNoShapePeakInQSample() {
     // Arrange
     auto in = makeSplatterSourceGrid();
-    auto out = vtkSmartPointer<vtkUnstructuredGrid>::New();
+    auto out = vtkSmartPointer<vtkPolyData>::New();
     vtkDataSetToPeaksFilteredDataSet peaksFilter(in, out);
 
     Mantid::Kernel::V3D coordinate(0, 0, 0);
@@ -336,7 +336,7 @@ public:
   void testExecutionWithTwoWorkspacesWithSingleSphericalShapesInQSample() {
     // Arrange
     auto in = makeSplatterSourceGrid();
-    auto out = vtkSmartPointer<vtkUnstructuredGrid>::New();
+    auto out = vtkSmartPointer<vtkPolyData>::New();
     vtkDataSetToPeaksFilteredDataSet peaksFilter(in, out);
 
     // Peak 1

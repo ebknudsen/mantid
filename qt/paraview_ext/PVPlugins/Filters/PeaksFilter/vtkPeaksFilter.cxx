@@ -10,13 +10,13 @@
 
 #include <boost/scoped_ptr.hpp>
 
+#include <vtkFieldData.h>
 #include <vtkInformation.h>
 #include <vtkInformationVector.h>
 #include <vtkNew.h>
 #include <vtkObjectFactory.h>
-#include <vtkUnstructuredGridAlgorithm.h>
-#include <vtkUnstructuredGrid.h>
-#include <vtkFieldData.h>
+#include <vtkPolyData.h>
+#include <vtkPolyDataAlgorithm.h>
 
 vtkStandardNewMacro(vtkPeaksFilter)
 
@@ -38,10 +38,12 @@ vtkPeaksFilter::~vtkPeaksFilter()
 int vtkPeaksFilter::RequestData(vtkInformation*, vtkInformationVector **inputVector, vtkInformationVector *outputVector)
 {
   vtkInformation *inInfo = inputVector[0]->GetInformationObject(0);
-  vtkUnstructuredGrid *inputDataSet = vtkUnstructuredGrid::SafeDownCast(inInfo->Get(vtkDataObject::DATA_OBJECT()));
+  vtkPolyData *inputDataSet =
+      vtkPolyData::SafeDownCast(inInfo->Get(vtkDataObject::DATA_OBJECT()));
 
   vtkInformation *outInfo = outputVector->GetInformationObject(0);
-  vtkUnstructuredGrid *outputDataSet = vtkUnstructuredGrid::SafeDownCast(outInfo->Get(vtkDataObject::DATA_OBJECT()));
+  vtkPolyData *outputDataSet =
+      vtkPolyData::SafeDownCast(outInfo->Get(vtkDataObject::DATA_OBJECT()));
 
   // If the field data does not contain the metadata, then don't do anything.
   try
@@ -77,7 +79,8 @@ int vtkPeaksFilter::RequestInformation(vtkInformation*, vtkInformationVector** i
 {
   // Set the meta data 
   vtkInformation *inInfo = inputVector[0]->GetInformationObject(0);
-  vtkUnstructuredGrid *inputDataSet = vtkUnstructuredGrid::SafeDownCast(inInfo->Get(vtkDataObject::DATA_OBJECT()));
+  vtkPolyData *inputDataSet =
+      vtkPolyData::SafeDownCast(inInfo->Get(vtkDataObject::DATA_OBJECT()));
 
   // If the field data does not contain the metadata, then don't do anything.
   try

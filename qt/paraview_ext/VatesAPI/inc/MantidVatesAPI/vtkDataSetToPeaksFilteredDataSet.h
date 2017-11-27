@@ -9,7 +9,7 @@
 #include "vtkSmartPointer.h"
 #include <string>
 
-class vtkUnstructuredGrid;
+class vtkPolyData;
 
 namespace Mantid {
 namespace VATES {
@@ -44,8 +44,8 @@ namespace VATES {
 
 class DLLExport vtkDataSetToPeaksFilteredDataSet {
 public:
-  vtkDataSetToPeaksFilteredDataSet(vtkSmartPointer<vtkUnstructuredGrid> input,
-                                   vtkSmartPointer<vtkUnstructuredGrid> output);
+  vtkDataSetToPeaksFilteredDataSet(vtkSmartPointer<vtkPolyData> input,
+                                   vtkSmartPointer<vtkPolyData> output);
   vtkDataSetToPeaksFilteredDataSet(const vtkDataSetToPeaksFilteredDataSet &) =
       default;
   vtkDataSetToPeaksFilteredDataSet &
@@ -75,8 +75,8 @@ private:
   bool m_isInitialised; ///<Flag if the filter is initialized
   Mantid::Kernel::SpecialCoordinateSystem
       m_coordinateSystem;                            ///< A coordinate system.
-  vtkSmartPointer<vtkUnstructuredGrid> m_inputData;  ///< Data to peak filter
-  vtkSmartPointer<vtkUnstructuredGrid> m_outputData; ///< Peak filtered data
+  vtkSmartPointer<vtkPolyData> m_inputData;          ///< Data to peak filter
+  vtkSmartPointer<vtkPolyData> m_outputData;         ///< Peak filtered data
   std::vector<Mantid::API::IPeaksWorkspace_sptr>
       m_peaksWorkspaces; ///< A list of peaks workspace names.
 };

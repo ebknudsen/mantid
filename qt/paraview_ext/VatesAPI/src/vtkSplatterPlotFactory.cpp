@@ -25,9 +25,9 @@
 #include <vtkNew.h>
 #include <vtkPointData.h>
 #include <vtkPoints.h>
+#include <vtkPolyData.h>
 #include <vtkPolyVertex.h>
 #include <vtkSystemIncludes.h>
-#include <vtkUnstructuredGrid.h>
 #include <vtkVertex.h>
 
 #include "boost/algorithm/clamp.hpp"
@@ -171,7 +171,7 @@ void vtkSplatterPlotFactory::doCreate(
   float *signal_ptr = signal->WritePointer(0, numPoints);
 
   // Create the data set.
-  auto visualDataSet = vtkSmartPointer<vtkUnstructuredGrid>::New();
+  auto visualDataSet = vtkSmartPointer<vtkPolyData>::New();
   this->dataSet = visualDataSet;
 
   size_t pointIndex = 0;
@@ -286,7 +286,7 @@ void vtkSplatterPlotFactory::doCreateMDHisto(
 
   // Set up the actual vtkDataSet, here the vtkUnstructuredGrid, the cell type
   // we choose here is the vtk_poly_vertex
-  auto visualDataSet = vtkSmartPointer<vtkUnstructuredGrid>::New();
+  auto visualDataSet = vtkSmartPointer<vtkPolyData>::New();
   this->dataSet = visualDataSet;
   visualDataSet->Allocate(imageSize);
 
@@ -340,8 +340,8 @@ void vtkSplatterPlotFactory::doCreateMDHisto(
     }
   }
 
-  visualDataSet->SetPoints(points.GetPointer());
-  visualDataSet->GetCellData()->SetScalars(signal.GetPointer());
+  visualDataSet->SetPoints(points.Get());
+  visualDataSet->GetCellData()->SetScalars(signal.Get());
   visualDataSet->Squeeze();
 }
 

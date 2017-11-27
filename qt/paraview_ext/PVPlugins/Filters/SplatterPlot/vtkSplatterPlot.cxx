@@ -163,6 +163,12 @@ int vtkSplatterPlot::RequestInformation(vtkInformation *,
   return 1;
 }
 
+int vtkSplatterPlot::FillInputPortInformation(int vtkNotUsed(port),
+                                              vtkInformation *info) {
+  info->Set(vtkAlgorithm::INPUT_REQUIRED_DATA_TYPE(), "vtkUnstructuredGrid");
+  return 1;
+}
+
 void vtkSplatterPlot::PrintSelf(ostream& os, vtkIndent indent)
 {
   this->Superclass::PrintSelf(os, indent);

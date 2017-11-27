@@ -12,16 +12,15 @@
 #include "MantidVatesAPI/ProgressAction.h"
 
 #include <vtkExtractSelection.h>
+#include <vtkFieldData.h>
+#include <vtkIdList.h>
 #include <vtkIdTypeArray.h>
 #include <vtkNew.h>
 #include <vtkPoints.h>
+#include <vtkPolyData.h>
 #include <vtkSelection.h>
 #include <vtkSelectionNode.h>
 #include <vtkSmartPointer.h>
-#include <vtkUnstructuredGrid.h>
-#include <vtkFieldData.h>
-#include <vtkIdList.h>
-#include <vtkFieldData.h>
 
 #include <boost/shared_ptr.hpp>
 
@@ -40,8 +39,7 @@ namespace VATES {
   * @param output : The resulting peaks filtered dataset
   */
 vtkDataSetToPeaksFilteredDataSet::vtkDataSetToPeaksFilteredDataSet(
-    vtkSmartPointer<vtkUnstructuredGrid> input,
-    vtkSmartPointer<vtkUnstructuredGrid> output)
+    vtkSmartPointer<vtkPolyData> input, vtkSmartPointer<vtkPolyData> output)
     : m_radiusNoShape(0.2), m_radiusFactor(2), m_defaultRadius(0.1),
       m_radiusType(Geometry::PeakShape::RadiusType::Radius),
       m_isInitialised(false),
@@ -50,12 +48,12 @@ vtkDataSetToPeaksFilteredDataSet::vtkDataSetToPeaksFilteredDataSet(
   if (nullptr == input) {
     throw std::runtime_error("Cannot construct "
                              "vtkDataSetToPeaksFilteredDataSet with NULL input "
-                             "vtkUnstructuredGrid");
+                             "vtkPolyData");
   }
   if (nullptr == output) {
     throw std::runtime_error("Cannot construct "
                              "vtkDataSetToPeaksFilteredDataSet with NULL "
-                             "output vtkUnstructuredGrid");
+                             "output vtkPolyData");
   }
 }
 
