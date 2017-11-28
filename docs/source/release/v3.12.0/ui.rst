@@ -22,10 +22,11 @@ Workbench
 SliceViewer and Vates Simple Interface
 --------------------------------------
 
-- Update SwitchToSliceViewer (shift + click) in MultiSlice view to work with nonorthogonal axes.
-- Pressing alt while clicking an arrow in the MultiSlice view opens a text box where one may precisely enter the slice position.
 - Fixed bug which would cause slice viewer to crash when deleting an overlaid peaks workspace.
 - Fixed a bug where overwriting peaks workspaces with overlaid in the slice viewer with peak backgrounds shown cause Mantid to crash.
+- Fixed an issue preventing sorting of the VSI peaks table.
+- Update SwitchToSliceViewer (shift + click) in MultiSlice view to work with nonorthogonal axes.
+- Pressing alt while clicking an arrow in the MultiSlice view opens a text box where one may precisely enter the slice position.
 
 .. figure:: ../../images/VatesMultiSliceView.png
    :class: screenshot
