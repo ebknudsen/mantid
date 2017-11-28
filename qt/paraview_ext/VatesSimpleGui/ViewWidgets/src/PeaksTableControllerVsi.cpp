@@ -348,9 +348,9 @@ void PeaksTableControllerVsi::createTable() {
           this, SLOT(onZoomToPeak(Mantid::API::IPeaksWorkspace_sptr, int)));
       QObject::connect(
           widget, SIGNAL(sortPeaks(const std::string &, const bool,
-                                   Mantid::API::IPeaksWorkspace_sptr)),
+                                   Mantid::API::IPeaksWorkspace *)),
           this, SLOT(onPeaksSorted(const std::string &, const bool,
-                                   Mantid::API::IPeaksWorkspace_sptr)));
+                                   Mantid::API::IPeaksWorkspace *)));
       // Initialize the viewablePeaks to be true
       std::map<std::string, std::vector<bool>> viewablePeaks =
           m_presenter->getInitializedViewablePeaks();

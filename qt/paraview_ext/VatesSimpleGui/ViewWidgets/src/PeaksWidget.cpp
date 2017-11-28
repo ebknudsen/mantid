@@ -102,7 +102,7 @@ void PeaksWidget::updateModel(std::vector<bool> visiblePeaks) {
  */
 void PeaksWidget::onPeaksSorted(const std::string &columnToSortBy,
                                 const bool sortAscending) {
-  emit sortPeaks(columnToSortBy, sortAscending, m_ws);
+  emit sortPeaks(columnToSortBy, sortAscending, m_ws.get());
 }
 
 } // namespace

@@ -42,7 +42,7 @@ public:
 signals:
   void zoomToPeak(Mantid::API::IPeaksWorkspace_sptr ws, int row);
   void sortPeaks(const std::string &columnToSortBy, const bool sortAscending,
-                 Mantid::API::IPeaksWorkspace_sptr ws);
+                 Mantid::API::IPeaksWorkspace *ws);
 public slots:
   void onZoomToPeak(Mantid::API::IPeaksWorkspace_sptr ws, int row);
 
